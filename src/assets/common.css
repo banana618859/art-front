@@ -1,0 +1,15 @@
+/* reset */
+*{box-sizing: border-box;padding: 0; margin: 0;}
+
+.wrapBox{
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: auto;
+}
+.h50{
+  height: 50px; line-height: 50px; font-size: 18px; padding:0 10px; text-align: left;
+  margin-bottom: 5px;
+}
