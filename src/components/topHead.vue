@@ -3,7 +3,7 @@
  * @Author: yizheng.yuan
  * @Date: 2020-10-31 09:00:48
  * @LastEditors: yizheng.yuan
- * @LastEditTime: 2020-10-31 18:49:47
+ * @LastEditTime: 2020-11-13 14:24:53
 -->
 <template>
   <div style="height: 60px; line-height: 60px; font-size: 18px; color:#eee; background-color: #645f69; padding:0 10px; text-align: left;">
@@ -11,7 +11,7 @@
       @command="handleCommand" 
       style="float: right; color: #eee;">
       <span class="el-dropdown-link">
-        <span  v-if="userInfo">
+        <span  v-if="userInfo" style="cursor: pointer;">
           {{userInfo.username}}
           <i class="el-icon-arrow-down el-icon--right"></i>
         </span>

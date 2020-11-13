@@ -3,7 +3,7 @@
  * @Author: yizheng.yuan
  * @Date: 2020-10-31 09:33:52
  * @LastEditors: yizheng.yuan
- * @LastEditTime: 2020-10-31 18:32:43
+ * @LastEditTime: 2020-11-13 15:01:01
 -->
 <template>
   <div class="login" style="width: 400px; overflow: hidden; border-radius: 5px; background-color: #eee;">
@@ -14,6 +14,12 @@
       </el-form-item>
       <el-form-item label="密码" prop="password">
         <el-input v-model="ruleForm.password"></el-input>
+      </el-form-item>
+      <el-form-item label="角色" prop="role">
+        <el-select v-model="ruleForm.role" placeholder="请选择角色">
+          <el-option label="老师" value="teacher"></el-option>
+          <el-option label="学生" value="student"></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="submitForm('ruleForm')">登录</el-button>
@@ -29,7 +35,8 @@
       return {
         ruleForm: {
           username: 'admin',
-          password: 'admin'
+          password: 'admin',
+          role: 'teacher'
         },
         rules: {
           username: [
@@ -37,6 +44,9 @@
           ],
           password: [
             { required: true, message: '请输入密码', trigger: 'blur' }
+          ],
+          role: [
+            { required: true, message: '请选择角色', trigger: 'change' }
           ]
         }
       };
@@ -49,14 +59,12 @@
             // this.$router.push('/')
             // 后台登录
             this.$axios.post(
-                  `${window.baseUrl}/login`,
-                  {
-                    username: this.ruleForm.username,
-                    password: this.ruleForm.password
-                  }).then((res) =>{          //这里使用了ES6的语法
-                  console.log('response:',res,res.data[0])       //请求成功返回的数据
-                  if(res.data.length ==1){
-                    this.$store.commit('saveUserInfo',res.data[0])
+                    `${window.baseUrl}/login`,
+                    this.ruleForm,
+                  ).then((res) =>{          //这里使用了ES6的语法
+                  console.log('response:',res)       //请求成功返回的数据
+                  if(res.data && res.data.code==200){
+                    this.$store.commit('saveUserInfo',res.data.data[0])
                     this.$message({
                       message:'登录成功！',
                       type:'success'
@@ -82,6 +90,7 @@
         });
       },
       resetForm(formName) {
+        console.log('resetForm')
         this.$refs[formName].resetFields();
       }
     }
