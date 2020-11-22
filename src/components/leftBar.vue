@@ -3,7 +3,7 @@
  * @Author: yizheng.yuan
  * @Date: 2020-10-31 09:00:48
  * @LastEditors: yizheng.yuan
- * @LastEditTime: 2020-10-31 11:44:44
+ * @LastEditTime: 2020-11-22 20:49:31
 -->
 <template>
   <div style="background-color: #eee;">
@@ -60,7 +60,12 @@
               },
               {
                 id: 12,
-                name: '用户编辑',
+                name: '导入excel',
+                path: '/importExcel'
+              },
+              {
+                id: 13,
+                name: '列车数据',
                 path: '/userEdit'
               }
             ]

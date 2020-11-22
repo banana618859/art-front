@@ -3,7 +3,7 @@
  * @Author: yizheng.yuan
  * @Date: 2020-10-25 23:35:45
  * @LastEditors: yizheng.yuan
- * @LastEditTime: 2020-10-31 10:48:06
+ * @LastEditTime: 2020-11-21 20:11:54
  */
 import Vue from 'vue';
 import VueRouter from 'vue-router';
@@ -14,7 +14,7 @@ import UserEdit from '../components/UserEdit.vue';
 
 import Role from '../components/Role.vue';
 import Right from '../components/Right.vue';
-
+import importExcel from '../components/importExcel.vue';
 Vue.use(VueRouter);
 
 const routes = [
@@ -32,6 +32,11 @@ const routes = [
         path:'/userEdit',
         name:'userEdit',
         component: UserEdit
+      },
+      {
+        path:'/importExcel',
+        name:'importExcel',
+        component: importExcel
       },
       {
         path:'/role',

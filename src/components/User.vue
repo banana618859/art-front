@@ -3,12 +3,13 @@
  * @Author: yizheng.yuan
  * @Date: 2020-10-31 09:01:07
  * @LastEditors: yizheng.yuan
- * @LastEditTime: 2020-11-13 16:45:46
+ * @LastEditTime: 2020-11-13 21:20:47
 -->
 <template>
   <div style="display: flex; flex-direction: column; height: 100%;">
     <p>
       <el-button @click="toAddUser" type="primary" size="small">新增用户</el-button>
+      <el-button @click="exportExcel" type="success" size="small">导出excel</el-button>
     </p>
     <div style="flex: 1;">
       <el-table
@@ -82,7 +83,8 @@
 </template>
 
 <script>
-  
+  import Util from '../js/util.js';
+  console.log('Util:',Util)
   export default {
     data(){
       return{
@@ -96,35 +98,53 @@
         total: 50
       }
     },
-    mounted(){
+    async mounted(){
       
-      this.getData(1,10);
+      let res = await this.getData(1,10);
+      this.allPerson = res.data.data;
+      this.total =  res.data.total;
     },
     methods:{
+      async exportExcel(){
+        let rel = await this.getData(1,this.total);
+        if(rel && rel.data && rel.data.data){
+          let data = rel.data.data;
+          console.log('data:',data)
+          Util.exportExcel(data);
+        }
+        
+      },
       getData(skipNum, pageSize){
-        let that = this;
-        this.$axios({
-          method:'post',
-          url:`${window.baseUrl}/hello`,
-          data:{
-            skipNum,
-            pageSize
-          }
-        }).then((res) =>{          //这里使用了ES6的语法
-            console.log('response:',res)       //请求成功返回的数据
-            that.allPerson = res.data.data;
-            that.total =  res.data.total;
-        }).catch((error) =>{
-            console.log(error)       //请求失败返回的数据
+        return new Promise((resolve,rej)=>{
+          let that = this;
+          this.$axios({
+            method:'post',
+            url:`${window.baseUrl}/hello`,
+            data:{
+              skipNum,
+              pageSize
+            }
+          }).then((res) =>{          //这里使用了ES6的语法
+              console.log('response:',res)       //请求成功返回的数据
+              
+              resolve(res)
+          }).catch((error) =>{
+              console.log(error)       //请求失败返回的数据
+              resolve(false)
+          })
         })
       },
-      handleSizeChange(val) {
+      async handleSizeChange(val) {
         console.log(`每页 ${val} 条`);
-        this.getData(this.currentPage,val);
+        let res = await this.getData(this.currentPage,val);
+        this.allPerson = res.data.data;
+        this.total =  res.data.total;
       },
-      handleCurrentChange(val) {
+      async handleCurrentChange(val) {
         console.log(`当前页: ${val}`);
-        this.getData(val, this.pageSize);
+        let res = await this.getData(val, this.pageSize);
+        this.allPerson = res.data.data;
+        this.total =  res.data.total;
       },
       editChannel(row){
         console.log('修改用户');

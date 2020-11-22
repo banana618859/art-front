@@ -3,7 +3,7 @@
  * @Author: yizheng.yuan
  * @Date: 2020-10-31 09:33:52
  * @LastEditors: yizheng.yuan
- * @LastEditTime: 2020-11-13 15:01:01
+ * @LastEditTime: 2020-11-21 19:31:13
 -->
 <template>
   <div class="login" style="width: 400px; overflow: hidden; border-radius: 5px; background-color: #eee;">
@@ -81,6 +81,10 @@
                   
               }).catch((error) =>{
                   console.log(error)       //请求失败返回的数据
+                  this.$message({
+                      message:'服务器发生异常！',
+                      type:'error'
+                    })
               })
             
           } else {
