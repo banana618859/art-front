@@ -3,13 +3,20 @@
  * @Author: yizheng.yuan
  * @Date: 2020-10-31 09:01:07
  * @LastEditors: yizheng.yuan
- * @LastEditTime: 2020-10-31 16:02:49
+ * @LastEditTime: 2020-11-29 16:40:15
 -->
 <template>
   <div style="height: 100%; display: flex; flex-direction: column;">
     <p class="h50">权限列表：(基础权限由后台返回)</p>
-    <rightBox :allRight="allRight" style="flex: 1; overflow: auto; margin-bottom: 50px;"></rightBox>
+    <!-- <rightBox :allRight="allRight" style="flex: 1; overflow: auto; margin-bottom: 50px;"></rightBox> -->
 
+    <div style="height: cal(100%-50px); overflow: auto;">
+      <rightBox 
+        :allRight="allRight"
+        @pageSelect="pageSelectFun"
+        >
+      </rightBox>
+    </div>
   </div>
 </template>
 
@@ -26,16 +33,19 @@
             id: 1,
             name: '用户管理',
             icon: 'el-icon-user-solid',
+            checked: true,
             children:[
               {
                 id: 11,
                 name: '用户列表',
                 path: '/user',
+                checked: true,
                 children:[
                 {
                     id: 111,
                     name: '增',
                     path: 'add',
+                    checked: true,
                   },
                   {
                     id: 112,
@@ -83,15 +93,18 @@
             id: 2,
             name: '教务管理',
             icon: 'el-icon-s-cooperation',
+            checked: true,
             children:[
               {
                 id: 21,
                 name: '学生管理',
+                checked: true,
                 children:[
                 {
                     id: 211,
                     name: '增',
                     path: 'add',
+                    checked: true,
                   },
                   {
                     id: 212,
@@ -162,16 +175,19 @@
             id: 3,
             name: '权限管理',
             icon: 'el-icon-s-tools',
+            checked: true,
             children:[
               {
                 id: 31,
                 name: '角色列表',
                 path: '/role',
+                checked: true,
                 children:[
                 {
                     id: 311,
                     name: '增',
                     path: 'add',
+                    checked: true,
                   },
                   {
                     id: 312,
@@ -230,6 +246,19 @@
               }).catch((error) =>{
                   console.log(error)       //请求失败返回的数据
               })
+    },
+    methods:{
+      pageSelectFun(page){
+        console.log('pageSelect:',page);
+      },
+      sonPageSelectFun(page){
+        console.log('sonPageSelect:',page);
+      },
+      sunPageSelectFun(page){
+        console.log('sunPageSelect:',page);
+      }
     }
   };
   </script>
+
+  

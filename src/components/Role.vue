@@ -3,7 +3,7 @@
  * @Author: yizheng.yuan
  * @Date: 2020-10-31 09:01:07
  * @LastEditors: yizheng.yuan
- * @LastEditTime: 2020-10-31 12:32:12
+ * @LastEditTime: 2020-11-30 09:32:49
 -->
 <template>
   <div>
@@ -17,19 +17,263 @@
       
       <el-table-column label="操作">
           <template slot-scope="scope">
-              <el-button @click="editChannel(scope.row)" type="text" size="small">编辑</el-button>
-              <el-button @click="delChannel(scope.row)" type="text" size="small">删除</el-button>
+              <el-button @click="editRow(scope.row)" type="text" size="small">编辑</el-button>
+              <el-button @click="delRow(scope.row)" type="text" size="small">
+                <span class="redColor">删除</span>
+              </el-button>
           </template>
       </el-table-column>
     </el-table>
+
+    <el-dialog
+      title="编辑权限"
+      class="myDialog blueHead"
+      :visible.sync="showRight"
+      :close-on-click-modal="false"
+      width="50%">
+      <div v-if="currentPerson.roleInfo" style="padding: 0 15px;">
+        <p v-if="isAdd">
+          角色名称：
+          <el-input style="width: 250px;" v-model="currentPerson.roleInfo.name"></el-input>
+        </p>
+        <p v-else>当前角色：{{currentPerson.roleInfo.name}}</p>
+        <div style="max-height: 460px; overflow: auto; margin-top: 10px;">
+          <rightBox 
+            :allRight="currentPerson.allRight"
+            @pageSelect="pageSelectFun"
+            >
+          </rightBox>
+        </div>
+        <p style="text-align: right; margin-bottom: 15px; margin-top: 5px;">
+          <el-button @click="showRight = false">取 消</el-button>
+          <el-button type="primary" @click="saveRight">确 定</el-button>
+        </p>
+      </div> 
+    </el-dialog>
   </div>
 </template>
 
 <script>
-  
+  import rightBox from './rightBox'
   export default {
+    components:{
+      rightBox
+    },
     data(){
       return{
+        allCount: 0,
+        currentPerson:{
+          roleInfo: null,
+          allRight: null
+        },
+        baseRight: null,
+        allRight:[
+        {
+            id: 1,
+            name: '用户管理',
+            icon: 'el-icon-user-solid',
+            checked: false,
+            children:[
+              {
+                id: 11,
+                name: '用户列表',
+                path: '/user',
+                checked: false,
+                children:[
+                {
+                    id: 111,
+                    name: '增',
+                    path: 'add',
+                    checked: false
+                  },
+                  {
+                    id: 112,
+                    name: '删',
+                    path: 'delete',
+                    checked: false
+                  },{
+                    id: 113,
+                    name: '改',
+                    path: 'update',
+                    checked: false
+                  },{
+                    id: 114,
+                    name: '查',
+                    path: 'read',
+                    checked: false
+                  }
+                ]
+              },
+              {
+                id: 12,
+                name: '用户编辑',
+                path: '/userEdit',
+                checked: false,
+                children:[
+                {
+                    id: 121,
+                    name: '增',
+                    path: 'add',
+                    checked: false
+                  },
+                  {
+                    id: 122,
+                    name: '删',
+                    path: 'delete',
+                    checked: false
+                  },{
+                    id: 123,
+                    name: '改',
+                    path: 'update',
+                    checked: false
+                  },{
+                    id: 124,
+                    name: '查',
+                    path: 'read',
+                    checked: false
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            id: 2,
+            name: '教务管理',
+            icon: 'el-icon-s-cooperation',
+            children:[
+              {
+                id: 21,
+                name: '学生管理',
+                children:[
+                {
+                    id: 211,
+                    name: '增',
+                    path: 'add'
+                  },
+                  {
+                    id: 212,
+                    name: '删',
+                    path: 'delete',
+                  },{
+                    id: 213,
+                    name: '改',
+                    path: 'update',
+                  },{
+                    id: 214,
+                    name: '查',
+                    path: 'read',
+                  }
+                ]
+              },
+              {
+                id: 22,
+                name: '教师管理',
+                children:[
+                {
+                    id: 221,
+                    name: '增',
+                    path: 'add',
+                  },
+                  {
+                    id: 222,
+                    name: '删',
+                    path: 'delete',
+                  },{
+                    id: 223,
+                    name: '改',
+                    path: 'update',
+                  },{
+                    id: 224,
+                    name: '查',
+                    path: 'read',
+                  }
+                ]
+              },
+              {
+                id: 23,
+                name: '考试管理',
+                children:[
+                {
+                    id: 231,
+                    name: '增',
+                    path: 'add',
+                  },
+                  {
+                    id: 232,
+                    name: '删',
+                    path: 'delete',
+                  },{
+                    id: 233,
+                    name: '改',
+                    path: 'update',
+                  },{
+                    id: 234,
+                    name: '查',
+                    path: 'read',
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            id: 3,
+            name: '权限管理',
+            icon: 'el-icon-s-tools',
+            children:[
+              {
+                id: 31,
+                name: '角色列表',
+                path: '/role',
+                children:[
+                {
+                    id: 311,
+                    name: '增',
+                    path: 'add'
+                  },
+                  {
+                    id: 312,
+                    name: '删',
+                    path: 'delete',
+                  },{
+                    id: 313,
+                    name: '改',
+                    path: 'update',
+                  },{
+                    id: 314,
+                    name: '查',
+                    path: 'read',
+                  }
+                ]
+              },
+              {
+                id: 32,
+                name: '权限列表',
+                path: '/right',
+                children:[
+                {
+                    id: 321,
+                    name: '增',
+                    path: 'add',
+                  },
+                  {
+                    id: 322,
+                    name: '删',
+                    path: 'delete',
+                  },{
+                    id: 323,
+                    name: '改',
+                    path: 'update',
+                  },{
+                    id: 324,
+                    name: '查',
+                    path: 'read',
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        showRight: false,
         allRole: [
         {
             id:1,
@@ -44,24 +288,208 @@
             name: '学生'
           }
         ],
-        allPerson: []
+        allPerson: [],
+        isAdd: false
       }
     },
     mounted(){
+      this.initData();
       let that = this;
       this.$axios({
-                  method:'get',
-                  url:`${window.baseUrl}/stu`,
-              }).then((res) =>{          //这里使用了ES6的语法
-                  console.log('response:',res)       //请求成功返回的数据
-                  that.allPerson = res.data.data;
-              }).catch((error) =>{
-                  console.log(error)       //请求失败返回的数据
-              })
+          method:'get',
+          url:`${window.baseUrl}/stu`,
+      }).then((res) =>{          //这里使用了ES6的语法
+          console.log('response:',res)       //请求成功返回的数据
+          that.allPerson = res.data.data;
+      }).catch((error) =>{
+          console.log(error)       //请求失败返回的数据
+      })
     },
     methods:{
+      initData(){
+        this.baseRight = JSON.parse(JSON.stringify(this.allRight))
+        for(let i=0;i<this.baseRight.length;i++){
+          let page = this.baseRight[i];
+          if(!page.hasOwnProperty('checked')){
+            this.$set(page, 'checked', false)
+          }
+          // 遍历第二级
+          let sonPage = page.children;
+          for(let j=0;j< sonPage.length; j++){
+            let pagea = sonPage[j];
+            if(!pagea.hasOwnProperty('checked')){
+              this.$set(pagea, 'checked', false)
+            }
+            // 遍历第三级
+            let sunPage = pagea.children;
+            for(let k=0;k< sunPage.length; k++){
+              let pageb = sunPage[k];
+              if(!pageb.hasOwnProperty('checked')){
+                this.$set(pageb, 'checked', false)
+              }
+            }
+          }
+        }
+        console.log('this.baseRight:',this.baseRight)
+      },
+      pageSelectFun(args){
+        // console.log('pageSelect:',args);
+        let secondArgs = [...args];
+        // 循环，逐级修改，打勾或除勾
+        let allRight = this.currentPerson.allRight;
+        let currentName = ''
+        if(args.length>0){
+          this.loopChangeCheck(args, allRight)
+        }
+        // console.log('allR:',this.currentPerson.allRight);
+        // 此时检查，如果儿子中有一个选中的，就选中父亲，否则去除父亲
+        console.log('secondArgs:',secondArgs,args);
+        if(secondArgs.length==1){
+          return;
+        }
+        // 根据最顶级父亲，统计每个分支选中的儿子
+        let realFa;
+        for(let i=0;i<allRight.length;i++){
+          if(allRight[i].name == secondArgs[0]){
+            realFa = allRight[i];
+            break;
+          }
+        }
+        console.log('realFa:',realFa);
+        let allBatch=[]
+        let namePath=[];
+        this.allCount=0;
+            // namePath.push(realFa.name)
+        this.findSon(realFa.children, namePath, allBatch);
+        console.log('allBatch:',allBatch);
+        // 循环所有路径
+        for(let i=0;i<allBatch.length;i++){
+          let oneAllLoad = allBatch[i].path;
+          this.changeValue([...oneAllLoad], realFa.children, allBatch[i].count);
+        }
+        // 最后统计顶级父亲数量
+        console.log('allCount:',this.allCount)
+        realFa.checked = this.allCount>0? true:false;
+      },
+      changeValue(oneAllLoad, allRight, count,allCount){
+        // console.log('oneAllLoad:',oneAllLoad)
+        let oneVal = oneAllLoad.shift();
+        for(let j=0;j<allRight.length;j++){
+          let oneSonLoad = allRight[j];
+          if(oneSonLoad.name == oneVal){
+            // console.log('oneSonLoad.name:',oneSonLoad.name)
+            if(count>0){
+              oneSonLoad.checked = true;
+              this.allCount += count;
+            }else{
+              oneSonLoad.checked = false;
+            }
+            if(oneAllLoad.length>0){
+              this.changeValue(oneAllLoad, oneSonLoad.children, count)
+            }
+          }
+        }
+      },
+      findSon(arr, namePath, allBatch){
+        if(arr[0].children){
+          for(let z=0;z<arr.length;z++){
+            let oneB = arr[z];
+            let myPath = [...namePath, oneB.name]
+            this.findSon(oneB.children, myPath, allBatch)
+          }
+        }
+        else{
+          let count=0;
+          for(let z=0;z<arr.length;z++){
+            if(arr[z].checked){
+              count++;
+            }
+          }
+          allBatch.push({
+            path: namePath,
+            count
+          })
+        }
+      },
+      loopChangeCheck(args, allRight){
+        let currentName = args.shift();
+        // console.log('currentName:',currentName)
+        for(let i=0;i<allRight.length;i++){
+          if(allRight[i].name == currentName){
+            // allRight[i].checked = !allRight[i].checked;
+            // 判断参数是否还有
+            if(args.length>0){
+              this.loopChangeCheck(args, allRight[i].children);
+            }else if(args.length==0){
+              allRight[i].checked = !allRight[i].checked;
+              if(allRight[i].children){
+                this.loopSonCheck(allRight[i].children, allRight[i].checked)
+              }
+            }
+          }
+        }
+      },
+      loopSonCheck(arr, status){
+        for(let i=0;i<arr.length;i++){
+          console.log('loopSonCheck:',arr[i].name)
+          arr[i].checked = status;
+          if(arr[i].children){
+            this.loopSonCheck(arr[i].children, status)
+          }
+        }
+      },
+      checkOnce(arr){
+        // 第一次循环，看最底层是否有勾选的，组成数组
+        let resultArr=[];
+        for(let i=0;i<arr.length;i++){
+          if(arr[i].children){
+            this.checkOnceSon(arr[i].children,i,resultArr);
+          }
+        }
+        console.log('选中结果：',resultArr)
+      },
+      checkOnceSon(arr,index,resultArr){
+        if(arr[0].children){
+          for(let i=0;i<arr.length;i++){
+            this.checkOnceSon(arr[i].children,index,resultArr)
+          }
+        }else{
+          let count=0;
+          for(let i=0;i<arr.length;i++){
+            if(arr[i].checked){
+              count++
+            }
+          }
+          resultArr.push(
+            {
+              index,
+              count
+            }
+          )
+        }
+      },
+      saveRight(){
+        console.log('saveRight');
+        this.showRight = false;
+      },
       addRole(){
-        console.log('addRole')
+        console.log('addRole');
+        this.currentPerson.roleInfo = {
+          name: ''
+        };
+        this.currentPerson.allRight = this.baseRight;
+        this.isAdd = true;
+        this.showRight = true;
+      },
+      editRow(row){
+        console.log('editRow',row);
+        this.currentPerson.roleInfo = row;
+        this.currentPerson.allRight = this.allRight;
+        this.isAdd = false;
+        this.showRight = true;
+      },
+      delRow(row){
+        console.log('delRow',row)
       }
     }
   };

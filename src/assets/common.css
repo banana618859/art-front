@@ -1,5 +1,5 @@
 /* reset */
-*{box-sizing: border-box;padding: 0; margin: 0;}
+*{box-sizing: border-box;padding: 0; margin: 0; list-style: none;}
 
 .wrapBox{
   position: absolute;
@@ -12,4 +12,47 @@
 .h50{
   height: 50px; line-height: 50px; font-size: 18px; padding:0 10px; text-align: left;
   margin-bottom: 5px;
+}
+
+.pd10{
+  padding: 10px;
+}
+.pd-lr10{
+  padding-left: 10px;
+  padding-right: 10px;
+}
+.vCenter{
+  display: flex;
+  align-items: center;
+}
+.redColor{
+  color: #f73f3f;
+}
+
+.myDialog .el-dialog{
+  border-radius: 5px;
+  overflow: hidden;
+}
+.myDialog .el-dialog__body{
+  padding: 10px;
+  
+}
+
+.blueHead .el-dialog__header{
+  /* background-color: #9eaab7; */
+  background-color: #2a2e32;
+  
+}
+.blueHead .el-dialog__title{
+  color:#bfb6b6;
+}
+.radius_tl5{
+  border-top-left-radius: 5px;
+}
+.radius_bl5{
+  border-bottom-left-radius: 5px;
+}
+.radius_tbl5{
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
 }
