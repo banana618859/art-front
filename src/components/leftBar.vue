@@ -3,7 +3,7 @@
  * @Author: yizheng.yuan
  * @Date: 2020-10-31 09:00:48
  * @LastEditors: yizheng.yuan
- * @LastEditTime: 2020-11-22 20:49:31
+ * @LastEditTime: 2020-11-30 13:46:24
 -->
 <template>
   <div style="background-color: #eee;">
@@ -77,7 +77,8 @@
             children:[
               {
                 id: 21,
-                name: '学生管理'
+                name: '学生管理',
+                path: '/datas'
               },
               {
                 id: 21,

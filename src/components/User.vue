@@ -3,7 +3,7 @@
  * @Author: yizheng.yuan
  * @Date: 2020-10-31 09:01:07
  * @LastEditors: yizheng.yuan
- * @LastEditTime: 2020-11-13 21:20:47
+ * @LastEditTime: 2020-12-10 00:09:40
 -->
 <template>
   <div style="display: flex; flex-direction: column; height: 100%;">
@@ -21,7 +21,6 @@
         </el-table-column>
         <el-table-column prop="id" label="ID" width="80"></el-table-column>
         <el-table-column prop="username" label="姓名" width="120"></el-table-column>
-        <el-table-column prop="password" label="密码" width="120"></el-table-column>
         <el-table-column prop="sex" label="性别" width="120"></el-table-column>
         
         
@@ -51,8 +50,7 @@
     <el-dialog
       :title="isAdd ? '新增用户': '修改用户'"
       :visible.sync="dialogVisible"
-      width="30%"
-      :before-close="handleClose">
+      width="30%">
       <el-form ref="form" :model="form" label-width="80px">
         <el-form-item label="ID" v-if="!isAdd">
           <el-input v-model="form.id" :disabled="!isAdd"></el-input>
@@ -68,8 +66,13 @@
         </el-form-item>
         <el-form-item label="角色" prop="role">
           <el-select v-model="form.role" :disabled="!isAdd" placeholder="请选择角色">
-            <el-option label="老师" value="teacher"></el-option>
-            <el-option label="学生" value="student"></el-option>
+            <el-option 
+              :label="item.name" 
+              :value="item.id"
+              v-for="(item,index) in allRole" 
+              :key="item.name+index">
+            </el-option>
+              
           </el-select>
         </el-form-item>
       </el-form>
@@ -95,7 +98,8 @@
         isAdd: false,
         currentPage: 1,
         pageSize: 10,
-        total: 50
+        total: 50,
+        allRole: []
       }
     },
     async mounted(){
@@ -103,8 +107,28 @@
       let res = await this.getData(1,10);
       this.allPerson = res.data.data;
       this.total =  res.data.total;
+
+      // 获取所有角色
+      this.getAllRole();
     },
     methods:{
+      getAllRole(){
+        this.$axios({
+            method:'get',
+            url:`${window.baseUrl}/getAllRole`,
+        }).then((res) =>{          //这里使用了ES6的语法
+            console.log('getAllRole:',res)       //请求成功返回的数据
+          this.allRole=[];
+          for(let i=0;i<res.data.data.length;i++){
+            let one = res.data.data[i];
+            one.roleRight = JSON.parse(one.roleRight);
+            this.allRole.push(one);
+          }
+            // this.allRole = res.data.data;
+        }).catch((error) =>{
+            console.log(error)       //请求失败返回的数据
+        })
+      },
       async exportExcel(){
         let rel = await this.getData(1,this.total);
         if(rel && rel.data && rel.data.data){
@@ -147,7 +171,7 @@
         this.total =  res.data.total;
       },
       editChannel(row){
-        console.log('修改用户');
+        console.log('修改用户',row);
         this.isAdd = false;
         this.form = row;
         this.dialogVisible = true;
@@ -157,7 +181,8 @@
         this.isAdd = true;
       },
       addUser(form){
-        console.log('删除用户');
+        form.role = form.role/1;
+        console.log('增加用户',form);
         let that = this;
         this.$axios({
           method:'post',

@@ -3,7 +3,7 @@
  * @Author: yizheng.yuan
  * @Date: 2020-10-25 23:35:45
  * @LastEditors: yizheng.yuan
- * @LastEditTime: 2020-11-21 20:11:54
+ * @LastEditTime: 2020-11-30 13:47:18
  */
 import Vue from 'vue';
 import VueRouter from 'vue-router';
@@ -15,6 +15,10 @@ import UserEdit from '../components/UserEdit.vue';
 import Role from '../components/Role.vue';
 import Right from '../components/Right.vue';
 import importExcel from '../components/importExcel.vue';
+
+import Datas from '../components/Datas.vue';
+
+
 Vue.use(VueRouter);
 
 const routes = [
@@ -47,6 +51,11 @@ const routes = [
         path:'/right',
         name:'Right',
         component: Right
+      },
+      {
+        path:'/datas',
+        name:'datas',
+        component: Datas
       }
     ]
   },
