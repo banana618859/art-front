@@ -3,7 +3,7 @@
  * @Author: yizheng.yuan
  * @Date: 2020-10-31 09:00:48
  * @LastEditors: yizheng.yuan
- * @LastEditTime: 2020-11-30 13:46:24
+ * @LastEditTime: 2020-12-16 00:55:36
 -->
 <template>
   <div style="background-color: #eee;">
@@ -11,6 +11,7 @@
       功能列表
     </div>
     <el-menu
+      v-if="myRole && myRole.roleRight"
       default-active="2"
       :router="openRouter"
       class="el-menu-vertical-demo"
@@ -20,8 +21,9 @@
       text-color="#fff"
       active-text-color="#ffd04b">
       <el-submenu
-        v-for="(item,index) in menu" 
+        v-for="(item,index) in myRole.roleRight" 
         :key="item.name+index"
+        v-if="item.checked"
         :index="item.id+''">
         <template slot="title">
           <i :class="item.icon"></i>
@@ -30,6 +32,7 @@
         <el-menu-item-group v-if="item.children && item.children.length>0">
           <el-menu-item 
             v-for="(son,index) in item.children" 
+            v-if="son.checked"
             :key="son.name+index"
             :index="son.path">
             {{son.name}}
@@ -43,7 +46,11 @@
 </template>
 
 <script>
+  import {mapState} from 'vuex';
   export default{
+    computed:{
+      ...mapState(['myRole'])
+    },
     data(){
       return{
         openRouter: true,

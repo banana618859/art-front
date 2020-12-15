@@ -3,7 +3,7 @@
  * @Author: yizheng.yuan
  * @Date: 2020-10-31 09:33:52
  * @LastEditors: yizheng.yuan
- * @LastEditTime: 2020-11-21 19:31:13
+ * @LastEditTime: 2020-12-15 23:58:20
 -->
 <template>
   <div class="login" style="width: 400px; overflow: hidden; border-radius: 5px; background-color: #eee;">
@@ -17,8 +17,11 @@
       </el-form-item>
       <el-form-item label="角色" prop="role">
         <el-select v-model="ruleForm.role" placeholder="请选择角色">
-          <el-option label="老师" value="teacher"></el-option>
-          <el-option label="学生" value="student"></el-option>
+          <el-option
+            v-for="(item,index) in allRole" 
+            :key="item.name"
+            :label="item.name" 
+            :value="item.id"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item>
@@ -33,10 +36,11 @@
   export default{
     data() {
       return {
+        allRole: [],
         ruleForm: {
           username: 'admin',
           password: 'admin',
-          role: 'teacher'
+          role: ''
         },
         rules: {
           username: [
@@ -51,7 +55,25 @@
         }
       };
     },
+    created(){
+      this.getAllRoleName()
+    },
     methods: {
+      getAllRoleName() {
+        this.$axios.post(
+          `${window.baseUrl}/getAllRoleName`
+        )
+        .then((res) =>{          //这里使用了ES6的语法
+          console.log('response:',res)       //请求成功返回的数据
+          this.allRole = res.data.data;
+        }).catch((error) =>{
+            console.log(error)       //请求失败返回的数据
+            this.$message({
+                message:'服务器发生异常！',
+                type:'error'
+              })
+        })
+      },
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {

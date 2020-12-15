@@ -3,7 +3,7 @@
  * @Author: yizheng.yuan
  * @Date: 2020-10-31 09:01:07
  * @LastEditors: yizheng.yuan
- * @LastEditTime: 2020-12-10 00:09:40
+ * @LastEditTime: 2020-12-16 00:45:03
 -->
 <template>
   <div style="display: flex; flex-direction: column; height: 100%;">
@@ -21,8 +21,6 @@
         </el-table-column>
         <el-table-column prop="id" label="ID" width="80"></el-table-column>
         <el-table-column prop="username" label="姓名" width="120"></el-table-column>
-        <el-table-column prop="sex" label="性别" width="120"></el-table-column>
-        
         
         <el-table-column label="操作">
             <template slot-scope="scope">
