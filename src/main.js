@@ -3,13 +3,14 @@
  * @Author: yizheng.yuan
  * @Date: 2020-10-25 23:35:45
  * @LastEditors: yizheng.yuan
- * @LastEditTime: 2020-11-12 23:22:36
+ * @LastEditTime: 2020-12-16 18:11:26
  */
 import Vue from 'vue';
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import App from './App.vue';
 import './assets/common.css';
+
 
 // 路由守卫
 import './router/permission.js';
