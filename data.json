@@ -1,0 +1,68 @@
+[
+  {
+    "id": 31,
+    "name": "角色列表",
+    "path": "/role",
+    "checked": true,
+    "children": [
+      {
+        "id": 311,
+        "name": "增",
+        "path": "add",
+        "checked": true
+      },
+      {
+        "id": 312,
+        "name": "删",
+        "path": "delete",
+        "checked": true
+      },
+      {
+        "id": 313,
+        "name": "改",
+        "path": "update",
+        "checked": true
+      },
+      {
+        "id": 314,
+        "name": "查",
+        "path": "read",
+        "checked": true
+      }
+    ]
+  },
+  {
+    "id": 32,
+    "name": "权限列表",
+    "path": "/right",
+    "children": [
+      {
+        "id": 321,
+        "name": "增",
+        "path": "add",
+        "checked": true
+      },
+      {
+        "id": 322,
+        "name": "删",
+        "path": "delete",
+        "checked": true
+      },
+      {
+        "id": 323,
+        "name": "改",
+        "path": "update",
+        "checked": true
+      },
+      {
+        "id": 324,
+        "name": "查",
+        "path": "read",
+        "checked": true
+      }
+    ],
+    "checked": true
+  }
+]
+}
+]
