@@ -3,7 +3,7 @@
  * @Author: yizheng.yuan
  * @Date: 2020-10-31 09:00:48
  * @LastEditors: yizheng.yuan
- * @LastEditTime: 2020-12-16 00:55:36
+ * @LastEditTime: 2020-12-26 22:55:25
 -->
 <template>
   <div style="background-color: #eee;">
@@ -11,7 +11,7 @@
       功能列表
     </div>
     <el-menu
-      v-if="myRole && myRole.roleRight"
+      v-if="myRole"
       default-active="2"
       :router="openRouter"
       class="el-menu-vertical-demo"
@@ -59,41 +59,33 @@
             id: 1,
             name: '用户管理',
             icon: 'el-icon-user-solid',
+            checked: true,
             children:[
               {
                 id: 11,
                 name: '用户列表',
-                path: '/user'
-              },
-              {
-                id: 12,
-                name: '导入excel',
-                path: '/importExcel'
-              },
-              {
-                id: 13,
-                name: '列车数据',
-                path: '/userEdit'
+                path: '/user',
+                checked: true
               }
             ]
           },
           {
             id: 2,
-            name: '教务管理',
+            name: '列车管理',
             icon: 'el-icon-s-cooperation',
+            checked: true,
             children:[
               {
                 id: 21,
-                name: '学生管理',
-                path: '/datas'
-              },
-              {
-                id: 21,
-                name: '教师管理'
+                name: '列车数据',
+                path: '/carManager',
+                checked: true
               },
               {
                 id: 22,
-                name: '考试管理'
+                name: '导入excel',
+                path: '/importExcel',
+                checked: true
               }
             ]
           },
@@ -101,16 +93,19 @@
             id: 3,
             name: '权限管理',
             icon: 'el-icon-s-tools',
+            checked: true,
             children:[
               {
                 id: 31,
                 name: '角色列表',
-                path: '/role'
+                path: '/role',
+                checked: true
               },
               {
                 id: 32,
                 name: '权限列表',
-                path: '/right'
+                path: '/right',
+                checked: true
               }
             ]
           }

@@ -3,14 +3,14 @@
  * @Author: yizheng.yuan
  * @Date: 2020-10-25 23:35:45
  * @LastEditors: yizheng.yuan
- * @LastEditTime: 2020-11-30 13:47:18
+ * @LastEditTime: 2020-12-25 21:29:38
  */
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Home from '../views/Home.vue';
 
 import User from '../components/User.vue';
-import UserEdit from '../components/UserEdit.vue';
+import CarManager from '../components/CarManager.vue';
 
 import Role from '../components/Role.vue';
 import Right from '../components/Right.vue';
@@ -33,9 +33,9 @@ const routes = [
         component: User
       },
       {
-        path:'/userEdit',
-        name:'userEdit',
-        component: UserEdit
+        path:'/carManager',
+        name:'carManager',
+        component: CarManager
       },
       {
         path:'/importExcel',

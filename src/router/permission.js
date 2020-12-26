@@ -3,7 +3,7 @@
  * @Author: yizheng.yuan
  * @Date: 2020-04-23 11:39:20
  * @LastEditors: yizheng.yuan
- * @LastEditTime: 2020-12-16 00:23:42
+ * @LastEditTime: 2020-12-25 22:01:34
  */
 
 import router from "./index.js"
@@ -15,6 +15,8 @@ router.beforeEach((to,from,next)=>{
     if(to.path!='/login'){
         console.log('user-roles:',to.path);
         // 此处要检查是否登录
+        // next()
+        // return;
         if(!store.state.userInfo){
             console.log('未登录')
             // 路由到登录页

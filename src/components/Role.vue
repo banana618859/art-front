@@ -3,7 +3,7 @@
  * @Author: yizheng.yuan
  * @Date: 2020-10-31 09:01:07
  * @LastEditors: yizheng.yuan
- * @LastEditTime: 2020-12-10 00:50:18
+ * @LastEditTime: 2020-12-26 21:49:32
 -->
 <template>
   <div>
@@ -41,7 +41,7 @@
         <p v-else>当前角色：{{currentRole.name}}</p>
         <div style="max-height: 460px; overflow: auto; margin-top: 10px;">
           <rightBox 
-            :allRight="currentRole.allRight"
+            :allRight="currentRole.roleRight"
             @pageSelect="pageSelectFun"
             >
           </rightBox>
@@ -49,7 +49,7 @@
         <p style="text-align: right; margin-bottom: 15px; margin-top: 5px;">
           <el-button @click="showRight = false">取 消</el-button>
           <el-button v-if="isAdd" type="primary" @click="saveRight(currentRole)">确 定</el-button>
-          <el-button v-else type="primary" @click="updateRight(currentRole)">修 改</el-button>
+          <el-button v-else type="primary" @click="updateRole(currentRole)">修 改</el-button>
         </p>
       </div> 
     </el-dialog>
@@ -61,7 +61,7 @@
   import {mapState} from 'vuex';
   export default {
     computed:{
-      ...mapState(['userInfo'])
+      ...mapState(['userInfo','allRight'])
     },
     components:{
       rightBox
@@ -71,215 +71,9 @@
         allCount: 0,
         currentRole:{
           name: '',
-          allRight: null
+          roleRight: null
         },
         baseRight: null,
-        allRight:[
-        {
-            id: 1,
-            name: '用户管理',
-            icon: 'el-icon-user-solid',
-            checked: false,
-            children:[
-              {
-                id: 11,
-                name: '用户列表',
-                path: '/user',
-                checked: false,
-                children:[
-                {
-                    id: 111,
-                    name: '增',
-                    path: 'add',
-                    checked: false
-                  },
-                  {
-                    id: 112,
-                    name: '删',
-                    path: 'delete',
-                    checked: false
-                  },{
-                    id: 113,
-                    name: '改',
-                    path: 'update',
-                    checked: false
-                  },{
-                    id: 114,
-                    name: '查',
-                    path: 'read',
-                    checked: false
-                  }
-                ]
-              },
-              {
-                id: 12,
-                name: '用户编辑',
-                path: '/userEdit',
-                checked: false,
-                children:[
-                {
-                    id: 121,
-                    name: '增',
-                    path: 'add',
-                    checked: false
-                  },
-                  {
-                    id: 122,
-                    name: '删',
-                    path: 'delete',
-                    checked: false
-                  },{
-                    id: 123,
-                    name: '改',
-                    path: 'update',
-                    checked: false
-                  },{
-                    id: 124,
-                    name: '查',
-                    path: 'read',
-                    checked: false
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            id: 2,
-            name: '教务管理',
-            icon: 'el-icon-s-cooperation',
-            children:[
-              {
-                id: 21,
-                name: '学生管理',
-                children:[
-                {
-                    id: 211,
-                    name: '增',
-                    path: 'add'
-                  },
-                  {
-                    id: 212,
-                    name: '删',
-                    path: 'delete',
-                  },{
-                    id: 213,
-                    name: '改',
-                    path: 'update',
-                  },{
-                    id: 214,
-                    name: '查',
-                    path: 'read',
-                  }
-                ]
-              },
-              {
-                id: 22,
-                name: '教师管理',
-                children:[
-                {
-                    id: 221,
-                    name: '增',
-                    path: 'add',
-                  },
-                  {
-                    id: 222,
-                    name: '删',
-                    path: 'delete',
-                  },{
-                    id: 223,
-                    name: '改',
-                    path: 'update',
-                  },{
-                    id: 224,
-                    name: '查',
-                    path: 'read',
-                  }
-                ]
-              },
-              {
-                id: 23,
-                name: '考试管理',
-                children:[
-                {
-                    id: 231,
-                    name: '增',
-                    path: 'add',
-                  },
-                  {
-                    id: 232,
-                    name: '删',
-                    path: 'delete',
-                  },{
-                    id: 233,
-                    name: '改',
-                    path: 'update',
-                  },{
-                    id: 234,
-                    name: '查',
-                    path: 'read',
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            id: 3,
-            name: '权限管理',
-            icon: 'el-icon-s-tools',
-            children:[
-              {
-                id: 31,
-                name: '角色列表',
-                path: '/role',
-                children:[
-                {
-                    id: 311,
-                    name: '增',
-                    path: 'add'
-                  },
-                  {
-                    id: 312,
-                    name: '删',
-                    path: 'delete',
-                  },{
-                    id: 313,
-                    name: '改',
-                    path: 'update',
-                  },{
-                    id: 314,
-                    name: '查',
-                    path: 'read',
-                  }
-                ]
-              },
-              {
-                id: 32,
-                name: '权限列表',
-                path: '/right',
-                children:[
-                {
-                    id: 321,
-                    name: '增',
-                    path: 'add',
-                  },
-                  {
-                    id: 322,
-                    name: '删',
-                    path: 'delete',
-                  },{
-                    id: 323,
-                    name: '改',
-                    path: 'update',
-                  },{
-                    id: 324,
-                    name: '查',
-                    path: 'read',
-                  }
-                ]
-              }
-            ]
-          }
-        ],
         showRight: false,
         allRole: [],
         allPerson: [],
@@ -299,7 +93,7 @@
             console.log('getAllRole:',res)       //请求成功返回的数据
           this.allRole=[];
           for(let i=0;i<res.data.data.length;i++){
-            let one = res.data.data[i];
+            let one = JSON.parse(JSON.stringify(res.data.data[i]));
             one.roleRight = JSON.parse(one.roleRight);
             this.allRole.push(one);
           }
@@ -338,12 +132,12 @@
         // console.log('pageSelect:',args);
         let secondArgs = [...args];
         // 循环，逐级修改，打勾或除勾
-        let allRight = this.currentRole.allRight;
+        let allRight = this.currentRole.roleRight;
         let currentName = ''
         if(args.length>0){
           this.loopChangeCheck(args, allRight)
         }
-        // console.log('allR:',this.currentRole.allRight);
+        // console.log('allR:',this.currentRole.roleRight);
         // 此时检查，如果儿子中有一个选中的，就选中父亲，否则去除父亲
         console.log('secondArgs:',secondArgs,args);
         if(secondArgs.length==1){
@@ -476,7 +270,7 @@
         let newOne = JSON.parse(JSON.stringify(currentRole))
         let newRole={}
         newRole.name = newOne.name;
-        newRole.roleRight = JSON.stringify(newOne.allRight)
+        newRole.roleRight = JSON.stringify(newOne.roleRight)
         console.log('newOne',newRole)
         // 先保存到数据库
         this.$axios({
@@ -495,25 +289,31 @@
       },
       updateRole(currentRole){
         console.log('updateRole',currentRole);
-        // 再在页面上展示
         let newOne = JSON.parse(JSON.stringify(currentRole))
-        let newRole={}
-        newRole.name = newOne.name;
-        newRole.roleRight = JSON.stringify(newOne.allRight)
-        console.log('newOne',newRole)
+        newOne.roleRight = JSON.stringify(newOne.roleRight)
         // 先保存到数据库
         this.$axios({
           method:'post',
           url:`${window.baseUrl}/updateRole`,
-          data: newRole
+          data: newOne
         }).then((res) =>{          //这里使用了ES6的语法
             console.log('response:',res)       //请求成功返回的数据
-            newRole.roleRight = JSON.parse(newRole.roleRight)
-            this.allRole.push(newRole)
+            // newRole.roleRight = JSON.parse(newRole.roleRight)
+            // this.allRole.push(newRole)
+            if(res){
+              this.$message({
+              message: '修改成功',
+              type: 'success'
+            })
+            }
             this.showRight = false;
         }).catch((error) =>{
             console.log(error)       //请求失败返回的数据
           this.showRight = false;
+          this.$message({
+              message: '修改失败',
+              type: 'error'
+            })
         })
       },
       addRole(){
@@ -521,16 +321,13 @@
         this.isAdd = true;
         this.showRight = true;
         this.currentRole.name= ''
-        this.currentRole.allRight = this.baseRight;
-        
+        this.currentRole.roleRight = this.baseRight;
       },
       editRow(row){
         this.isAdd = false;
         this.showRight = true;
         console.log('editRow',row);
-        this.currentRole.name = row.name;
-        this.currentRole.allRight = row.roleRight;
-        
+        this.currentRole = row;
       },
       delRow(row){
         console.log('delRow',row);

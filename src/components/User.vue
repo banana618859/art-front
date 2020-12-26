@@ -3,13 +3,13 @@
  * @Author: yizheng.yuan
  * @Date: 2020-10-31 09:01:07
  * @LastEditors: yizheng.yuan
- * @LastEditTime: 2020-12-16 00:45:03
+ * @LastEditTime: 2020-12-26 23:15:50
 -->
 <template>
   <div style="display: flex; flex-direction: column; height: 100%;">
     <p>
-      <el-button @click="toAddUser" type="primary" size="small">新增用户</el-button>
-      <el-button @click="exportExcel" type="success" size="small">导出excel</el-button>
+      <el-button @click="toAddUser" :disabled="!canAdd" type="primary" size="small">新增用户</el-button>
+      <el-button @click="exportExcel" :disabled="!canUpdate" type="success" size="small">导出excel</el-button>
     </p>
     <div style="flex: 1;">
       <el-table
@@ -24,8 +24,8 @@
         
         <el-table-column label="操作">
             <template slot-scope="scope">
-                <el-button @click="editChannel(scope.row)" type="text" size="small">编辑</el-button>
-                <el-button @click="delChannel(scope.row)" type="text" size="small" style="color: #ef5050;">删除</el-button>
+                <el-button @click="editChannel(scope.row)" type="text" size="small" :disabled="!canUpdate">编辑</el-button>
+                <el-button @click="delChannel(scope.row)" type="text" size="small" style="color: #ef5050;" :disabled="!canDelete">删除</el-button>
             </template>
         </el-table-column>
       </el-table>
@@ -59,18 +59,14 @@
         <el-form-item label="密码">
           <el-input v-model="form.password"></el-input>
         </el-form-item>
-        <el-form-item label="性别">
-          <el-input v-model="form.sex"></el-input>
-        </el-form-item>
         <el-form-item label="角色" prop="role">
-          <el-select v-model="form.role" :disabled="!isAdd" placeholder="请选择角色">
+          <el-select v-model="form.role" placeholder="请选择角色">
             <el-option 
               :label="item.name" 
               :value="item.id"
               v-for="(item,index) in allRole" 
               :key="item.name+index">
             </el-option>
-              
           </el-select>
         </el-form-item>
       </el-form>
@@ -89,6 +85,8 @@
   export default {
     data(){
       return{
+        fatherName: '用户管理',
+        pageName: '用户列表',
         isDisable: true,
         allPerson: [],
         dialogVisible: false,
@@ -97,11 +95,34 @@
         currentPage: 1,
         pageSize: 10,
         total: 50,
-        allRole: []
+        allRole: [],
+        canRead: false,
+        canAdd: false,
+        canDelete: false,
+        canUpdate: false,
       }
     },
     async mounted(){
-      
+      let pageRight = this.getPageRight(this.fatherName,this.pageName);
+      console.error('object:',pageRight);
+      for(let i=0;i<pageRight.children.length;i++){
+        let one = pageRight.children[i];
+        switch(one.path){
+          case 'read':
+            this.canRead = one.checked;
+            break;
+          case 'add':
+            this.canAdd = one.checked;
+            break;
+          case 'delete':
+            this.canDelete = one.checked;
+            break;
+          case 'update':
+            this.canUpdate = one.checked;
+            break;
+        }
+      }
+      console.error('right:',this.canRead,this.canAdd,this.canDelete,this.canUpdate);
       let res = await this.getData(1,10);
       this.allPerson = res.data.data;
       this.total =  res.data.total;
@@ -172,6 +193,7 @@
         console.log('修改用户',row);
         this.isAdd = false;
         this.form = row;
+        this.form.role = row.myRoleId
         this.dialogVisible = true;
       },
       toAddUser(){

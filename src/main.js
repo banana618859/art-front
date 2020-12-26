@@ -3,7 +3,7 @@
  * @Author: yizheng.yuan
  * @Date: 2020-10-25 23:35:45
  * @LastEditors: yizheng.yuan
- * @LastEditTime: 2020-12-16 18:11:26
+ * @LastEditTime: 2020-12-25 22:42:47
  */
 import Vue from 'vue';
 import ElementUI from 'element-ui';
@@ -14,6 +14,10 @@ import './assets/common.css';
 
 // 路由守卫
 import './router/permission.js';
+
+// mixin
+import mixin from './js/mixin'
+Vue.mixin(mixin)
 
 Vue.use(ElementUI);
 import router from './router';

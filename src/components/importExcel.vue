@@ -3,12 +3,13 @@
  * @Author: yizheng.yuan
  * @Date: 2020-11-21 19:58:51
  * @LastEditors: yizheng.yuan
- * @LastEditTime: 2020-11-22 20:09:17
+ * @LastEditTime: 2020-12-26 20:38:46
 -->
 <template>
   <div>
     <p>导入Excel数据</p>
-    <el-form :model="ruleForm"
+    <el-form 
+      :model="ruleForm"
       size="mini" ref="ruleForm" style="padding: 10px 10px 0;"
       label-width="120px" class="demo-ruleForm" enctype="multipart/form-data">
       <el-form-item label="选择导入excel路径" prop="excelPath">
@@ -41,6 +42,7 @@
     },
     methods: {
       inputChange(e){
+        // event
         console.log('上传文件：',e)
         this.theFile = e.target.files[0]
       },
