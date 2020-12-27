@@ -52,12 +52,12 @@
         var target = document.getElementById('view');
         target.style.background = "#FFFFFF";
        
-        console.log('target:',target)
+         // console.log('target:',target)
         html2canvas(target, {
           onrendered:function(canvas) {
             var contentWidth = canvas.width;
             var contentHeight = canvas.height;
-            console.log('进来这了---')
+             // console.log('进来这了---')
             //一页pdf显示html页面生成的canvas高度;
             var pageHeight = contentWidth / 592.28 * 841.89;
             //未生成pdf的html页面高度

@@ -3,13 +3,13 @@
  * @Author: yizheng.yuan
  * @Date: 2020-10-31 09:01:07
  * @LastEditors: yizheng.yuan
- * @LastEditTime: 2020-12-26 23:15:50
+ * @LastEditTime: 2020-12-27 12:24:29
 -->
 <template>
   <div style="display: flex; flex-direction: column; height: 100%;">
     <p>
       <el-button @click="toAddUser" :disabled="!canAdd" type="primary" size="small">新增用户</el-button>
-      <el-button @click="exportExcel" :disabled="!canUpdate" type="success" size="small">导出excel</el-button>
+      <el-button @click="exportExcel" :disabled="!canUpdate" type="success" size="small">导出用户excel表</el-button>
     </p>
     <div style="flex: 1;">
       <el-table
@@ -81,12 +81,20 @@
 
 <script>
   import Util from '../js/util.js';
-  console.log('Util:',Util)
+   // console.log('Util:',Util)
+   import {mapState} from 'vuex';
   export default {
+    computed:{
+      ...mapState(['userInfo'])
+    },
     data(){
       return{
         fatherName: '用户管理',
         pageName: '用户列表',
+        canRead: false,
+        canAdd: false,
+        canDelete: false,
+        canUpdate: false,
         isDisable: true,
         allPerson: [],
         dialogVisible: false,
@@ -95,34 +103,11 @@
         currentPage: 1,
         pageSize: 10,
         total: 50,
-        allRole: [],
-        canRead: false,
-        canAdd: false,
-        canDelete: false,
-        canUpdate: false,
+        allRole: []
       }
     },
     async mounted(){
-      let pageRight = this.getPageRight(this.fatherName,this.pageName);
-      console.error('object:',pageRight);
-      for(let i=0;i<pageRight.children.length;i++){
-        let one = pageRight.children[i];
-        switch(one.path){
-          case 'read':
-            this.canRead = one.checked;
-            break;
-          case 'add':
-            this.canAdd = one.checked;
-            break;
-          case 'delete':
-            this.canDelete = one.checked;
-            break;
-          case 'update':
-            this.canUpdate = one.checked;
-            break;
-        }
-      }
-      console.error('right:',this.canRead,this.canAdd,this.canDelete,this.canUpdate);
+      this.userInfo && this.getRight();
       let res = await this.getData(1,10);
       this.allPerson = res.data.data;
       this.total =  res.data.total;
@@ -131,12 +116,37 @@
       this.getAllRole();
     },
     methods:{
+      getRight(){
+        let pageRight = this.getPageRight(this.fatherName,this.pageName);
+        if(!pageRight){
+          return;
+        }
+         // console.error('object:',pageRight);
+        for(let i=0;i<pageRight.children.length;i++){
+          let one = pageRight.children[i];
+          switch(one.path){
+            case 'read':
+              this.canRead = one.checked;
+              break;
+            case 'add':
+              this.canAdd = one.checked;
+              break;
+            case 'delete':
+              this.canDelete = one.checked;
+              break;
+            case 'update':
+              this.canUpdate = one.checked;
+              break;
+          }
+        }
+         // console.error('right:',this.canRead,this.canAdd,this.canDelete,this.canUpdate);
+      },
       getAllRole(){
         this.$axios({
             method:'get',
             url:`${window.baseUrl}/getAllRole`,
         }).then((res) =>{          //这里使用了ES6的语法
-            console.log('getAllRole:',res)       //请求成功返回的数据
+             // console.log('getAllRole:',res)       //请求成功返回的数据
           this.allRole=[];
           for(let i=0;i<res.data.data.length;i++){
             let one = res.data.data[i];
@@ -145,14 +155,14 @@
           }
             // this.allRole = res.data.data;
         }).catch((error) =>{
-            console.log(error)       //请求失败返回的数据
+             // console.log(error)       //请求失败返回的数据
         })
       },
       async exportExcel(){
         let rel = await this.getData(1,this.total);
         if(rel && rel.data && rel.data.data){
           let data = rel.data.data;
-          console.log('data:',data)
+           // console.log('data:',data)
           Util.exportExcel(data);
         }
         
@@ -168,29 +178,29 @@
               pageSize
             }
           }).then((res) =>{          //这里使用了ES6的语法
-              console.log('response:',res)       //请求成功返回的数据
+               // console.log('response:',res)       //请求成功返回的数据
               
               resolve(res)
           }).catch((error) =>{
-              console.log(error)       //请求失败返回的数据
+               // console.log(error)       //请求失败返回的数据
               resolve(false)
           })
         })
       },
       async handleSizeChange(val) {
-        console.log(`每页 ${val} 条`);
+         // console.log(`每页 ${val} 条`);
         let res = await this.getData(this.currentPage,val);
         this.allPerson = res.data.data;
         this.total =  res.data.total;
       },
       async handleCurrentChange(val) {
-        console.log(`当前页: ${val}`);
+         // console.log(`当前页: ${val}`);
         let res = await this.getData(val, this.pageSize);
         this.allPerson = res.data.data;
         this.total =  res.data.total;
       },
       editChannel(row){
-        console.log('修改用户',row);
+         // console.log('修改用户',row);
         this.isAdd = false;
         this.form = row;
         this.form.role = row.myRoleId
@@ -202,14 +212,14 @@
       },
       addUser(form){
         form.role = form.role/1;
-        console.log('增加用户',form);
+         // console.log('增加用户',form);
         let that = this;
         this.$axios({
           method:'post',
           url:`${window.baseUrl}/addUser`,
           data: form
         }).then((res) =>{          //这里使用了ES6的语法
-            console.log('addUser-res:',res)       //请求成功返回的数据
+             // console.log('addUser-res:',res)       //请求成功返回的数据
             if(res && res.data && res.data.code==200){
               this.$message({
                 message: '新增成功！',
@@ -225,18 +235,23 @@
             }
             
         }).catch((error) =>{
-            console.log(error)       //请求失败返回的数据
+             // console.log(error)       //请求失败返回的数据
         })
       },
-      delChannel(form){
-        console.log('删除用户');
+      async delChannel(form){
+         // console.log('删除用户');
+        // 删除时，需要二次确认
+        let rel = await this.answerFun('确定删除该用户？');
+        if (!rel) {
+            return;
+        }
         let that = this;
         this.$axios({
           method:'post',
           url:`${window.baseUrl}/deleteUser`,
           data: form
         }).then((res) =>{          //这里使用了ES6的语法
-            console.log('deleteUser-res:',res)       //请求成功返回的数据
+             // console.log('deleteUser-res:',res)       //请求成功返回的数据
             if(res && res.data && res.data.code==200){
               this.$message({
                 message: '删除成功！',
@@ -256,21 +271,21 @@
             }
             
         }).catch((error) =>{
-            console.log(error)       //请求失败返回的数据
+             // console.log(error)       //请求失败返回的数据
         })
       },
       handleClose() {
-        console.log('关闭前-会触发该函数');
+         // console.log('关闭前-会触发该函数');
       },
       sureChange(form){
-        console.log('用户修改:',form);
+         // console.log('用户修改:',form);
         // 将数据提交到后台更新
         this.$axios({
           method:'post',
           url:`${window.baseUrl}/updateUser`,
           data: form
         }).then((res) =>{          //这里使用了ES6的语法
-            console.log('updateUser-res:',res)       //请求成功返回的数据
+             // console.log('updateUser-res:',res)       //请求成功返回的数据
             if(res && res.data && res.data.code==200){
               this.$message({
                 message: '修改成功！',
@@ -285,7 +300,7 @@
             }
             
         }).catch((error) =>{
-            console.log(error)       //请求失败返回的数据
+             // console.log(error)       //请求失败返回的数据
         })
       }
     }

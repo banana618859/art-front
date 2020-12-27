@@ -43,7 +43,7 @@
     methods: {
       inputChange(e){
         // event
-        console.log('上传文件：',e)
+         // console.log('上传文件：',e)
         this.theFile = e.target.files[0]
       },
       importData() {
@@ -53,7 +53,7 @@
         //把文件信息放入对象中
         formData.append("file", this.theFile);
         formData.append("owner", this.userInfo.id);
-        // console.log(FormData.get("multipartFile"));
+        //  // console.log(FormData.get("multipartFile"));
         var config={
             headers: {
                 "Content-Type": "multipart/form-data"
@@ -63,7 +63,7 @@
           `${window.baseUrl}/importExcelbb`,
           formData,config
         ).then((res) => {          //这里使用了ES6的语法
-          console.log('response:', res)       //请求成功返回的数据
+           // console.log('response:', res)       //请求成功返回的数据
           if (res.data && res.data.code==200) {
             this.$message({
               message: '上传成功！',
@@ -78,7 +78,7 @@
           }
 
         }).catch((error) => {
-          console.log(error)       //请求失败返回的数据
+           // console.log(error)       //请求失败返回的数据
           this.$message({
             message: '服务器发生异常！',
             type: 'error'

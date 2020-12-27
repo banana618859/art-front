@@ -33,7 +33,7 @@
     },
     methods:{
       handleCommand(command) {
-        console.log('click on item ' + command);
+         // console.log('click on item ' + command);
         switch(command){
           case 'logout':
             this.logout();
@@ -41,8 +41,8 @@
         }
       },
       logout(){
-        console.log('logout')
-        this.$store.commit('saveUserInfo',null);
+         // console.log('logout')
+        this.$store.commit('saveUserInfo',false);
         this.$router.push('/login')
       }
     }

@@ -6,7 +6,7 @@
  * @LastEditTime: 2020-11-12 23:25:20
  */
 var isPro = process.env.NODE_ENV === 'production';
-console.log('isPro:',isPro)
+ // console.log('isPro:',isPro)
 module.exports = {
   lintOnSave: false,
   devServer: {

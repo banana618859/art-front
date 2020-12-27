@@ -29,6 +29,11 @@
   color: #f73f3f;
 }
 
+/* 字体 */
+.font12{
+  font-size: 12px;
+}
+
 .myDialog .el-dialog{
   border-radius: 5px;
   overflow: hidden;

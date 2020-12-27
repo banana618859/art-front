@@ -64,10 +64,10 @@
           `${window.baseUrl}/getAllRoleName`
         )
         .then((res) =>{          //这里使用了ES6的语法
-          console.log('response:',res)       //请求成功返回的数据
+           // console.log('response:',res)       //请求成功返回的数据
           this.allRole = res.data.data;
         }).catch((error) =>{
-            console.log(error)       //请求失败返回的数据
+             // console.log(error)       //请求失败返回的数据
             this.$message({
                 message:'服务器发生异常！',
                 type:'error'
@@ -77,14 +77,14 @@
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            console.log(`登录：${window.baseUrl}/login`)
+             // console.log(`登录：${window.baseUrl}/login`)
             // this.$router.push('/')
             // 后台登录
             this.$axios.post(
                     `${window.baseUrl}/login`,
                     this.ruleForm,
                   ).then((res) =>{          //这里使用了ES6的语法
-                  console.log('response:',res)       //请求成功返回的数据
+                   // console.log('response:',res)       //请求成功返回的数据
                   if(res.data && res.data.code==200){
                     this.$store.commit('saveUserInfo',res.data.data[0])
                     this.$message({
@@ -102,7 +102,7 @@
                   }
                   
               }).catch((error) =>{
-                  console.log(error)       //请求失败返回的数据
+                   // console.log(error)       //请求失败返回的数据
                   this.$message({
                       message:'服务器发生异常！',
                       type:'error'
@@ -110,13 +110,13 @@
               })
             
           } else {
-            console.log('error submit!!');
+             // console.log('error submit!!');
             return false;
           }
         });
       },
       resetForm(formName) {
-        console.log('resetForm')
+         // console.log('resetForm')
         this.$refs[formName].resetFields();
       }
     }

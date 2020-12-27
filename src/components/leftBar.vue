@@ -3,7 +3,7 @@
  * @Author: yizheng.yuan
  * @Date: 2020-10-31 09:00:48
  * @LastEditors: yizheng.yuan
- * @LastEditTime: 2020-12-26 22:55:25
+ * @LastEditTime: 2020-12-27 13:01:20
 -->
 <template>
   <div style="background-color: #eee;">
@@ -114,10 +114,10 @@
     },
     methods: {
       handleOpen(key, keyPath) {
-        console.log('handleOpen:',key, keyPath);
+         // console.log('handleOpen:',key, keyPath);
       },
       handleClose(key, keyPath) {
-        console.log('handleClose:',key, keyPath);
+         // console.log('handleClose:',key, keyPath);
       }
     }
   }

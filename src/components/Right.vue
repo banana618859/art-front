@@ -41,21 +41,21 @@
                   method:'get',
                   url:`${window.baseUrl}/stu`,
               }).then((res) =>{          //这里使用了ES6的语法
-                  console.log('response:',res)       //请求成功返回的数据
+                   // console.log('response:',res)       //请求成功返回的数据
                   that.allPerson = res.data.data;
               }).catch((error) =>{
-                  console.log(error)       //请求失败返回的数据
+                   // console.log(error)       //请求失败返回的数据
               })
     },
     methods:{
       pageSelectFun(page){
-        console.log('pageSelect:',page);
+         // console.log('pageSelect:',page);
       },
       sonPageSelectFun(page){
-        console.log('sonPageSelect:',page);
+         // console.log('sonPageSelect:',page);
       },
       sunPageSelectFun(page){
-        console.log('sunPageSelect:',page);
+         // console.log('sunPageSelect:',page);
       }
     }
   };

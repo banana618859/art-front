@@ -3,12 +3,12 @@
  * @Author: yizheng.yuan
  * @Date: 2020-10-31 09:01:07
  * @LastEditors: yizheng.yuan
- * @LastEditTime: 2020-12-26 21:49:32
+ * @LastEditTime: 2020-12-27 12:25:40
 -->
 <template>
   <div>
     <p class="h50">
-      <el-button style="float: right; margin-top: 10px;" @click="addRole" type="success" size="mini">增加</el-button>
+      <el-button style="float: right; margin-top: 10px;" @click="addRole" :disabled="!canAdd" type="success" size="mini">增加</el-button>
       角色列表：</p>
     <el-table
       :data="allRole" border size="mini" style="flex: 1;width: 100%;">
@@ -19,10 +19,15 @@
       
       <el-table-column label="操作">
           <template slot-scope="scope">
-              <el-button @click="editRow(scope.row)" type="text" size="small">编辑</el-button>
-              <el-button @click="delRow(scope.row)" type="text" size="small">
+            <span v-if="scope.row.name =='admin'">
+              最高管理员不允许修改
+            </span>
+            <span v-else>
+              <el-button @click="editRow(scope.row)" type="text" :disabled="!canUpdate" size="small">编辑</el-button>
+              <el-button @click="delRow(scope.row)" type="text" :disabled="!canDelete" size="small">
                 <span class="redColor">删除</span>
               </el-button>
+            </span>
           </template>
       </el-table-column>
     </el-table>
@@ -36,7 +41,10 @@
       <div style="padding: 0 15px;">
         <p v-if="isAdd">
           角色名称：
-          <el-input style="width: 250px;" v-model="currentRole.name"></el-input>
+          <el-input style="width: 250px;" @blur="blurFun(currentRole.name)" v-model="currentRole.name"></el-input>
+          <span class="redColor font12" v-if="showTip">
+            {{tipText}}
+          </span>
         </p>
         <p v-else>当前角色：{{currentRole.name}}</p>
         <div style="max-height: 460px; overflow: auto; margin-top: 10px;">
@@ -48,7 +56,7 @@
         </div>
         <p style="text-align: right; margin-bottom: 15px; margin-top: 5px;">
           <el-button @click="showRight = false">取 消</el-button>
-          <el-button v-if="isAdd" type="primary" @click="saveRight(currentRole)">确 定</el-button>
+          <el-button v-if="isAdd" type="primary" :disabled="isUsed" @click="saveRight(currentRole)">确 定</el-button>
           <el-button v-else type="primary" @click="updateRole(currentRole)">修 改</el-button>
         </p>
       </div> 
@@ -68,6 +76,15 @@
     },
     data(){
       return{
+        fatherName: '权限管理',
+        pageName: '角色列表',
+        canRead: false,
+        canAdd: false,
+        canDelete: false,
+        canUpdate: false,
+        isUsed: true,
+        showTip: false,
+        tipText: '该角色名已被占用!',
         allCount: 0,
         currentRole:{
           name: '',
@@ -83,14 +100,57 @@
     mounted(){
       this.initData();
       this.getAllRole();
+      this.getRight();
     },
     methods:{
+      blurFun(roleName){
+        this.isUsed = false;
+        this.showTip = false;
+        for(let i=0;i<this.allRole.length;i++){
+          if(this.allRole[i].name == roleName){
+            this.isUsed = true;
+            this.showTip = true;
+            break;
+          }
+        }
+        if(this.isUsed){
+          this.$message({
+            message:'该角色名已被占用!',
+            type:'warning'
+          });
+        }
+      },
+      getRight(){
+        let pageRight = this.getPageRight(this.fatherName,this.pageName);
+        if(!pageRight){
+          return;
+        }
+         // console.error('object:',pageRight);
+        for(let i=0;i<pageRight.children.length;i++){
+          let one = pageRight.children[i];
+          switch(one.path){
+            case 'read':
+              this.canRead = one.checked;
+              break;
+            case 'add':
+              this.canAdd = one.checked;
+              break;
+            case 'delete':
+              this.canDelete = one.checked;
+              break;
+            case 'update':
+              this.canUpdate = one.checked;
+              break;
+          }
+        }
+         // console.error('right-role:',this.canRead,this.canAdd,this.canDelete,this.canUpdate);
+      },
       getAllRole(){
         this.$axios({
             method:'get',
             url:`${window.baseUrl}/getAllRole`,
         }).then((res) =>{          //这里使用了ES6的语法
-            console.log('getAllRole:',res)       //请求成功返回的数据
+             // console.log('getAllRole:',res)       //请求成功返回的数据
           this.allRole=[];
           for(let i=0;i<res.data.data.length;i++){
             let one = JSON.parse(JSON.stringify(res.data.data[i]));
@@ -99,7 +159,7 @@
           }
             // this.allRole = res.data.data;
         }).catch((error) =>{
-            console.log(error)       //请求失败返回的数据
+             // console.log(error)       //请求失败返回的数据
         })
       },
       initData(){
@@ -126,10 +186,10 @@
             }
           }
         }
-        console.log('this.baseRight:',this.baseRight)
+         // console.log('this.baseRight:',this.baseRight)
       },
       pageSelectFun(args){
-        // console.log('pageSelect:',args);
+        //  // console.log('pageSelect:',args);
         let secondArgs = [...args];
         // 循环，逐级修改，打勾或除勾
         let allRight = this.currentRole.roleRight;
@@ -137,9 +197,9 @@
         if(args.length>0){
           this.loopChangeCheck(args, allRight)
         }
-        // console.log('allR:',this.currentRole.roleRight);
+        //  // console.log('allR:',this.currentRole.roleRight);
         // 此时检查，如果儿子中有一个选中的，就选中父亲，否则去除父亲
-        console.log('secondArgs:',secondArgs,args);
+         // console.log('secondArgs:',secondArgs,args);
         if(secondArgs.length==1){
           return;
         }
@@ -151,29 +211,29 @@
             break;
           }
         }
-        console.log('realFa:',realFa);
+         // console.log('realFa:',realFa);
         let allBatch=[]
         let namePath=[];
         this.allCount=0;
             // namePath.push(realFa.name)
         this.findSon(realFa.children, namePath, allBatch);
-        console.log('allBatch:',allBatch);
+         // console.log('allBatch:',allBatch);
         // 循环所有路径
         for(let i=0;i<allBatch.length;i++){
           let oneAllLoad = allBatch[i].path;
           this.changeValue([...oneAllLoad], realFa.children, allBatch[i].count);
         }
         // 最后统计顶级父亲数量
-        console.log('allCount:',this.allCount)
+         // console.log('allCount:',this.allCount)
         realFa.checked = this.allCount>0? true:false;
       },
       changeValue(oneAllLoad, allRight, count,allCount){
-        // console.log('oneAllLoad:',oneAllLoad)
+        //  // console.log('oneAllLoad:',oneAllLoad)
         let oneVal = oneAllLoad.shift();
         for(let j=0;j<allRight.length;j++){
           let oneSonLoad = allRight[j];
           if(oneSonLoad.name == oneVal){
-            // console.log('oneSonLoad.name:',oneSonLoad.name)
+            //  // console.log('oneSonLoad.name:',oneSonLoad.name)
             if(count>0){
               oneSonLoad.checked = true;
               this.allCount += count;
@@ -209,7 +269,7 @@
       },
       loopChangeCheck(args, allRight){
         let currentName = args.shift();
-        // console.log('currentName:',currentName)
+        //  // console.log('currentName:',currentName)
         for(let i=0;i<allRight.length;i++){
           if(allRight[i].name == currentName){
             // allRight[i].checked = !allRight[i].checked;
@@ -227,7 +287,7 @@
       },
       loopSonCheck(arr, status){
         for(let i=0;i<arr.length;i++){
-          console.log('loopSonCheck:',arr[i].name)
+           // console.log('loopSonCheck:',arr[i].name)
           arr[i].checked = status;
           if(arr[i].children){
             this.loopSonCheck(arr[i].children, status)
@@ -242,7 +302,7 @@
             this.checkOnceSon(arr[i].children,i,resultArr);
           }
         }
-        console.log('选中结果：',resultArr)
+         // console.log('选中结果：',resultArr)
       },
       checkOnceSon(arr,index,resultArr){
         if(arr[0].children){
@@ -265,30 +325,30 @@
         }
       },
       saveRight(currentRole){
-        console.log('saveRight',currentRole);
+         // console.log('saveRight',currentRole);
         // 再在页面上展示
         let newOne = JSON.parse(JSON.stringify(currentRole))
         let newRole={}
         newRole.name = newOne.name;
         newRole.roleRight = JSON.stringify(newOne.roleRight)
-        console.log('newOne',newRole)
+         // console.log('newOne',newRole)
         // 先保存到数据库
         this.$axios({
           method:'post',
           url:`${window.baseUrl}/saveRole`,
           data: newRole
         }).then((res) =>{          //这里使用了ES6的语法
-            console.log('response:',res)       //请求成功返回的数据
+             // console.log('response:',res)       //请求成功返回的数据
             newRole.roleRight = JSON.parse(newRole.roleRight)
             this.allRole.push(newRole)
             this.showRight = false;
         }).catch((error) =>{
-            console.log(error)       //请求失败返回的数据
+             // console.log(error)       //请求失败返回的数据
           this.showRight = false;
         })
       },
       updateRole(currentRole){
-        console.log('updateRole',currentRole);
+         // console.log('updateRole',currentRole);
         let newOne = JSON.parse(JSON.stringify(currentRole))
         newOne.roleRight = JSON.stringify(newOne.roleRight)
         // 先保存到数据库
@@ -297,7 +357,7 @@
           url:`${window.baseUrl}/updateRole`,
           data: newOne
         }).then((res) =>{          //这里使用了ES6的语法
-            console.log('response:',res)       //请求成功返回的数据
+             // console.log('response:',res)       //请求成功返回的数据
             // newRole.roleRight = JSON.parse(newRole.roleRight)
             // this.allRole.push(newRole)
             if(res){
@@ -307,8 +367,13 @@
             })
             }
             this.showRight = false;
+
+            // 如果修改成功，而且这个修改的角色刚好就是当前登录的用户的角色，就更新当前用户的角色权限
+            if(currentRole.id == this.userInfo.myRoleId){
+              this.getMyRight(this.userInfo.myRoleId)
+            }
         }).catch((error) =>{
-            console.log(error)       //请求失败返回的数据
+             // console.log(error)       //请求失败返回的数据
           this.showRight = false;
           this.$message({
               message: '修改失败',
@@ -317,7 +382,7 @@
         })
       },
       addRole(){
-        console.log('addRole',this.baseRight);
+         // console.log('addRole',this.baseRight);
         this.isAdd = true;
         this.showRight = true;
         this.currentRole.name= ''
@@ -326,11 +391,15 @@
       editRow(row){
         this.isAdd = false;
         this.showRight = true;
-        console.log('editRow',row);
+         // console.log('editRow',row);
         this.currentRole = row;
       },
-      delRow(row){
-        console.log('delRow',row);
+      async delRow(row){
+         // console.log('delRow',row);
+        let rel = await this.answerFun('确定删除该角色？');
+        if (!rel) {
+            return;
+        }
         this.$axios({
           method:'post',
           url:`${window.baseUrl}/delRoleById`,
@@ -338,7 +407,7 @@
             id: row.id
           }
         }).then((res) =>{          //这里使用了ES6的语法
-            console.log('response:',res,this.allRole)       //请求成功返回的数据
+             // console.log('response:',res,this.allRole)       //请求成功返回的数据
             for(let i=0;i<this.allRole.length;i++){
               if(this.allRole[i].id == row.id){
                 this.allRole.splice(i,1);
@@ -346,7 +415,7 @@
               }
             }
         }).catch((error) =>{
-            console.log(error)       //请求失败返回的数据
+             // console.log(error)       //请求失败返回的数据
         })
       }
     }

@@ -3,16 +3,29 @@
  * @Author: yizheng.yuan
  * @Date: 2020-10-25 23:35:45
  * @LastEditors: yizheng.yuan
- * @LastEditTime: 2020-12-26 22:58:39
+ * @LastEditTime: 2020-12-27 12:54:16
  */
 import Vue from 'vue';
 import Vuex from 'vuex';
 
 Vue.use(Vuex);
 
+//保证刷新页面数据不消失*
+function storeLocalStore (name,data) {
+  if(typeof data =='object'){
+    if(data.password){
+      delete data.password;
+    }
+    window.localStorage.setItem(name,JSON.stringify(data));
+  }else{
+    window.localStorage.setItem(name,data);
+  }
+}
+
 export default new Vuex.Store({
   getters: {},
   state: {
+    flushId: 0,
     userInfo: null,
     myRole: null,
     allRight:[
@@ -177,8 +190,14 @@ export default new Vuex.Store({
     saveMyRole(state,data){
       state.myRole = data;
     },
+    saveFlushId(state,data){
+      state.flushId = data;
+      console.log('object:',data);
+    },
     saveUserInfo(state,data){
       state.userInfo = data;
+      // 存储到localStorage
+      storeLocalStore('userInfo',data)
     }
   },
   actions: {

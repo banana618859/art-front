@@ -206,16 +206,16 @@
         }
       },
       onSizeChange(){
-        console.log('onSizeChange')
+         // console.log('onSizeChange')
       },
       onCurrentChange(){
-        console.log('onCurrentChange')
+         // console.log('onCurrentChange')
       },
       selectTimeChange(){
-        console.log('selectTimeChange')
+         // console.log('selectTimeChange')
       },
       onSearch(){
-        console.log('onSearch')
+         // console.log('onSearch')
       },
     }
   }

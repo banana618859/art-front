@@ -3,7 +3,7 @@
  * @Author: yizheng.yuan
  * @Date: 2020-10-25 23:35:45
  * @LastEditors: yizheng.yuan
- * @LastEditTime: 2020-12-16 00:31:23
+ * @LastEditTime: 2020-12-27 13:06:32
 -->
 <template>
   <div class="home">
@@ -18,74 +18,69 @@
 </template>
 
 <script>
-// @ is an alias to /src
-import topHead from '@/components/topHead.vue';
-import leftBar from '@/components/leftBar.vue';
-import {mapState} from 'vuex';
-export default {
-  computed:{
-    ...mapState(['userInfo'])
-  },
-  name: 'Home',
-  components: {
-    topHead,
-    leftBar
-  },
-  data(){
-    return{
+  // @ is an alias to /src
+  import topHead from '@/components/topHead.vue';
+  import leftBar from '@/components/leftBar.vue';
+  import { mapState } from 'vuex';
+  export default {
+    name: 'Home',
+    components: {
+      topHead,
+      leftBar
+    },
+    
+    data() {
+      return {
+
+      }
+    },
+    computed: {
+      ...mapState(['userInfo','flushId'])
+    },
+    watch: {
+      flushId(newVal,oldVal){
+        if(this.$router.currentRoute.path !='/'){
+          this.$router.push('/')
+        }
+        
+      }
+    },
+    created() {
+      // 取回来权限
+       // console.log('this.userInfo:', this.userInfo)
+      this.getMyRight(this.userInfo.myRoleId);
+    },
+    methods: {
       
     }
-  },
-  created(){
-    // 取回来权限
-    console.log('this.userInfo:',this.userInfo)
-    this.getMyRight(this.userInfo.myRoleId)
-  },
-  methods:{
-    getMyRight(myRoleId) {
-        this.$axios.post(
-          `${window.baseUrl}/getRightByRoleId`,
-          {role: myRoleId}
-        )
-        .then((res) =>{          //这里使用了ES6的语法
-          console.log('response-role:',res)       //请求成功返回的数据
-          let myRight = res.data.data[0];
-          myRight.roleRight = JSON.parse(myRight.roleRight)
-          console.log('myRight:',myRight);
-          this.$store.commit('saveMyRole',myRight)
-        }).catch((error) =>{
-            console.log(error)       //请求失败返回的数据
-            this.$message({
-              message:'服务器发生异常！',
-              type:'error'
-            })
-        })
-      },
-  }
-};
+  };
 </script>
 
 <style>
-  .home{
-    width: 100%; height: 100%;
-    display: flex; flex-direction: column;
+  .home {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
   }
-  .main{
-    flex:1;
+
+  .main {
+    flex: 1;
     overflow: hidden;
     margin-top: 5px;
     display: flex;
   }
-  .leftBox{
+
+  .leftBox {
     width: 210px;
     background-color: #ddd;
     overflow: auto;
   }
-  .rightBox{
+
+  .rightBox {
     flex: 1;
     margin: 5px;
     border: 1px solid #ccc;
     padding: 5px;
   }
-
 </style>

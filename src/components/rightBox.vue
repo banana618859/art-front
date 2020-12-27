@@ -48,7 +48,7 @@
     methods: {
       pageSelect(){
         let arr = [...arguments]
-        console.log('pageSelect',arr);
+         // console.log('pageSelect',arr);
         this.$emit('pageSelect',arr);
       },
     },
